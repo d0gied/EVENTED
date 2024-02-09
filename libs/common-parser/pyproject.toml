@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "common-parser"
+version = "0.1.0"
+description = ""
+authors = ["d0gied <german.n.u@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+database-utils = { path = "../database-utils" }
+common-utils = { path = "../common-utils" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

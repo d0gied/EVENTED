@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "event-manager"
+version = "0.1.0"
+description = "Service to monitor events in database and triggers sending event messages"
+authors = ["d0gied <german.n.u@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+common_utils = { path = "../../libs/common-utils", develop = true }
+database_utils = { path = "../../libs/database-utils", develop = true }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

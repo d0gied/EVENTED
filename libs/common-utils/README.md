@@ -4,6 +4,12 @@
 
 [Read more](/docs/monorepo-specs.md#add-shared-library-to-service)
 
+## Usage
+
+```python
+from common_utils import ... # import what you need
+```
+
 ## Development
 
 ```bash

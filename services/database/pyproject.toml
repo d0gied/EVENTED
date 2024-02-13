@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "database"
+version = "0.1.0"
+description = "Database-as-a-Service"
+authors = ["d0gied <german.n.u@mail.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+common-utils = {path = "../../libs/common-utils", develop = false}
+message-broker = {path = "../../libs/message-broker", develop = false}
+pymongo = "^4.6.1"
+sqlalchemy = "^2.0.25"
+
+[tool.poetry.dev-dependencies]
+common-utils = {path = "../../libs/common-utils", develop = true}
+message-broker = {path = "../../libs/message-broker", develop = true}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

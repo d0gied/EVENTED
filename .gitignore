@@ -161,3 +161,7 @@ cython_debug/
 
 # Mac OS
 .DS_Store
+
+# secret and local config files
+**/*.secret.yml
+**/*.local.yml

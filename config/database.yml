@@ -1,0 +1,15 @@
+# /config/database.yml
+
+mongo:
+  host: mongo
+  port: 27017
+  database: evented
+  username: # your username
+  password: # your password
+
+postgres:
+  host: postgres
+  port: 5432
+  database: evented
+  username: # your username
+  password: # your password

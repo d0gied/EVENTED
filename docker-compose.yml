@@ -1,1 +1,10 @@
+version: "3.8"
 
+services:
+  database:
+    image: evented-database
+    build:
+      context: .
+      dockerfile: docker/service.Dockerfile
+      args:
+        - SERVICE_NAME=database

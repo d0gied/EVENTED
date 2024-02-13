@@ -23,67 +23,21 @@ EVENTED is service that provides a simple and scalable event management system. 
 
 ## Repo structure
 
-```plaintext
-/EVENTED                            # Root directory for the entire project
-│
-├── /docs                           # Documentation files for the project
-│   ├── architecture.md             # High-level architecture documentation
-│   └── api-specifications          # API specifications for each service
-│
-├── /services                       # Service-specific directories
-│   ├── /service                    # Microservice
-│   │   ├── /service                # Source code for service
-│   │   ├── /tests                  # Test code for service
-│   │   ├── Dockerfile              # Dockerfile for service
-│   │   ├── .env.example            # Example environment variables
-│   │   ├── pyproject.toml          # Python project configuration
-│   │   └── README.md               # Documentation specific to service
-│   │
-│   └── /service-n                  # More services...
-│
-├── /libs                           # Shared libraries and components
-│   ├── /common-utils               # Common utilities used across services
-│   │   ├── /src                    # Source code for common utilities
-│   │   └── /tests                  # Tests for common utilities
-│   │
-│   ├── /message-broker-interface   # Shared message broker interface code
-│   │   ├── /src                    # Source code for message broker integration
-│   │   └── /tests                  # Tests for message broker integration
-│   │
-│   └── /more-libraries             # More shared libraries...
-│
-├── /config                         # Configuration files for deployment, env, etc.
-│   ├── service-a-config.yaml       # Configuration for service A
-│   ├── service-b-config.yaml       # Configuration for service B
-│   └── message-broker-config.yaml  # Configuration for the message broker (e.g., topics)
-│
-├── /scripts                        # Utility scripts, e.g., for deployment or local setup
-│
-├── /infrastructure                 # Infrastructure as code for provisioning resources
-│   ├── /kubernetes                 # Kubernetes manifests or Helm charts
-│   └── /terraform                  # Terraform modules for cloud resources
-│
-├── docker-compose.yml              # Docker Compose file to run services locally
-├── .gitignore                      # Default gitignore file
-└── README.md                       # General documentation for the whole project
-```
+[read more](docs/monorepo-specs.md#repo-structure)
 
-### Notes on the Structure:
+## Architecture
 
-- **/services**: Contains all the individual services that make up your application. Each service has its own source code, dependencies, tests, Dockerfile for containerization, and service-specific documentation.
+[Read more](docs/architecture.md)
 
-- **/libs**: This is where the shared libraries or components that multiple services might use are placed. They should be versioned and could be independently released if desired.
+## Mono-repo Specifications
 
-- **/config**: Global configurations that might be used by CI/CD pipelines or during deployment are stored here. This should include the message broker configurations, such as topics, queues, and any other related configurations.
+[Read more](docs/monorepo-specs.md)
 
-- **/infrastructure**: Infrastructure as code (IaC) for provisioning the required infrastructure on cloud providers or on-premises environments.
+## Documentation
 
-- **/docs**: Important project-wide documentation, including architecture diagrams, API specifications, and other relevant guides.
+For now all documentations are in the libs directories. Each service has its own documentation in the `README.md` file.
+Sooner, we will have a separate documentation directory for the whole project.
 
-- **/scripts**: Scripts useful for development, deployment, or operational tasks. These might include database migration scripts, build scripts, or scripts to start/stop the entire stack locally.
+## Configuration
 
-- **CI/CD files**: These should include definitions for your continuous integration and deployment pipelines, specifying the jobs, stages, and actions for test, build, and deploy processes.
-
-- **Root-level files**: The root level usually contains README.md, LICENSE, .gitignore, docker-compose.yml (useful for local development environments), and any other configuration files needed at the project level.
-
-Remember, the key to a successful monorepo is maintaining consistency across all the components. This includes similar naming conventions, code styles, and README structures, which will make it easier for developers to understand and work within the repo.
+[Read more](libs/common-utils/README.md#common-utilsconfig)

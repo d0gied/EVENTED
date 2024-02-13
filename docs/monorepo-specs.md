@@ -71,15 +71,14 @@ This allows for code reuse across services and ensures that changes to shared li
 
 Poetry is used to manage the Python dependencies for the services and the shared libraries. It is also used to manage the Python version for the project.
 
-#### Usage
 
-**Install dependencies:**
+#### Install dependencies:
 ```bash
 # /services/{service_name}
 poetry install
 ```
 
-**Add public library to service:**
+#### Add public library to service:
 ```toml
 # /services/{service_name}/pyproject.toml
 [tool.poetry.dependencies]
@@ -99,7 +98,7 @@ poetry install # to install the shared library
 poetry add lib-name
 ```
 
-**Add shared library to service:**
+#### Add shared library to service:
 ```toml
 # /services/{service_name}/pyproject.toml
 [tool.poetry.dependencies]

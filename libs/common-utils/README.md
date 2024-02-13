@@ -2,18 +2,9 @@
 
 ## Adding to service
 
-Add into pyproject.toml:
-```toml
-# /service/{service_name}/pyproject.toml
-[tool.poetry.dependencies]
-common-utils = { path = "../../libs/common-utils", develop = true }
-```
+[Read more](/docs/monorepo-specs.md#add-shared-library-to-service)
 
-```bash
-# /services/{service_name}/
-poetry lock
-poetry install
-```
+```toml
 
 ## Usage
 

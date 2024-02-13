@@ -4,14 +4,6 @@
 
 [Read more](/docs/monorepo-specs.md#add-shared-library-to-service)
 
-```toml
-
-## Usage
-
-```python
-from common_utils import ... # import what you need
-```
-
 ## Development
 
 ```bash

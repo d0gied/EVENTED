@@ -59,17 +59,19 @@ class Config(ABC):
                 local_config or {},
             ]
         )
-        return cls.from_dict(result_config)
+        return cls.to_object(result_config)
 
     @classmethod
-    def from_dict(cls, config: dict[str, Any]) -> Self:
-        instance = Config()
-        for key, value in config.items():
-            if isinstance(value, dict):
-                setattr(instance, key, cls.from_dict(value))
-            else:
-                setattr(instance, key, value)
-        return instance  # type: ignore
+    def to_object(cls, obj: dict[str, Any] | list[Any] | Any) -> Self:
+        if isinstance(obj, dict):
+            instance = Config()
+            for key, value in obj.items():
+                setattr(instance, key, cls.to_object(value))
+        elif isinstance(obj, (list, tuple)):
+            instance = [cls.to_object(_obj) for _obj in obj]
+        else:
+            instance = obj
+        return instance # type: ignore
 
     @staticmethod
     def deep_merge_dicts(*dicts: dict[str, Any]) -> dict:

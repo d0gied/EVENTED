@@ -76,7 +76,8 @@ class Config(ABC):
         result = {}
         for d in dicts:
             for k, v in d.items():
-                if isinstance(v, dict):
+                base_value = result.get(k)
+                if isinstance(v, dict) and isinstance(base_value, dict):
                     result[k] = Config.deep_merge_dicts(result.get(k, {}), v)
                 else:
                     result[k] = v

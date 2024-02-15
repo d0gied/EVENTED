@@ -1,0 +1,28 @@
+handlers:
+  - console:
+      formatter: simple
+      level: DEBUG
+      stream: ext://sys.stdout
+
+  - file:
+      formatter: simple
+      level: DEBUG
+      filename: /var/log/myapp.log
+
+  - syslog:
+      formatter: simple
+      level: DEBUG
+      address: /dev/log
+      facility: local0
+      socktype: unix
+
+formatters:
+  simple:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+loggers:
+  myapp:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no

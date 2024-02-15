@@ -1,4 +1,6 @@
 from database.config import DatabaseConfig
 
 config = DatabaseConfig()
-print(config.tree)
+print(config.Mongo.host)
+print(config.postgres)
+

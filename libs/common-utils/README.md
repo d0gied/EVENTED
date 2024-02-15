@@ -39,28 +39,24 @@ Best practice is to add `config.py` module into your service and use it to load 
 
 ```python
 # /services/{service_name}/{service_name}/config.py
-from common_utils.config import Config
+from common_utils.config import ConfigLoader
 
-class DatabaseConfig(Config):
-    config_name = "database"
+loader = ConfigLoader("service_name")
+
+class DatabaseConfig:
+    class mongo:
+        host: str = loader.Field("mongo.host", env="MONGO_HOST")
+        port: int = loader.Field("mongo.port", env="MONGO_PORT")
+        username: str = loader.Field("mongo.username", env="MONGO_USERNAME")
+        password: str = loader.Field("mongo.password", env="MONGO_PASSWORD")
+        database: str = loader.Field("mongo.database", env="MONGO_DATABASE")
     
-    class Mongo:
-        host: str
-        port: int
-        username: str
-        password: str
-        database: str
-    
-    mongo: Mongo
-    
-    class Postgres:
-        host: str
-        port: int
-        username: str
-        password: str
-        database: str
-    
-    postgres: Postgres
+    class postgres:
+        host: str = loader.Field("postgres.host", env="POSTGRES_HOST")
+        port: int = loader.Field("postgres.port", env="POSTGRES_PORT")
+        username: str = loader.Field("postgres.username", env="POSTGRES_USERNAME")
+        password: str = loader.Field("postgres.password", env="POSTGRES_PASSWORD")
+        database: str = loader.Field("postgres.database", env="POSTGRES_DATABASE")
 ```
 
 ```yaml
@@ -95,22 +91,6 @@ config = DatabaseConfig()
 
 print(config.mongo.host) # localhost
 print(config.mongo.username) # root
-
-print(config.tree) # print all configuration in yaml format
-"""
-mongo:
-    host: localhost
-    port: 27017
-    username: root
-    password: root
-    database: test
-postgres:
-    host: localhost
-    port: 5432
-    username: root
-    password: root
-    database: test
-"""
 ```
 
 **Important**

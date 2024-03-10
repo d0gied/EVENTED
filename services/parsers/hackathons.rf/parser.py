@@ -66,5 +66,6 @@ def parse_hackathons():
     browser.quit()
 
 schedule.every().day.at("09:00").do(parse_hackathons)
-parse_hackathons()
         
+while True:
+    schedule.run_pending()

@@ -11,7 +11,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 from fake_useragent import UserAgent
-# from random_user_agent.user_agent import UserAgent
 
 LINK = 'https://www.xn--80aa3anexr8c.xn--p1ai/'
 
@@ -40,21 +39,21 @@ def parse_hackathons():
     for hack in allHacks:
         hackLink = hack['href']
         if hack.find('div', class_='t776__bgimg t-bgimg js-product-img') is None:
-            break
+            continue
         hackImage = hack.find('div', class_='t776__bgimg t-bgimg js-product-img').get('data-original')
         
         hackTitleCol = hack.find('div', class_='t776__title t-name t-name_xl js-product-name')
         hackTitleBig = hack.find('div', class_='t776__title t-name t-name_md js-product-name')
         if hackTitleCol is None and hackTitleBig is None:
-            break
+            continue
         
         hackTitle = (hackTitleCol if hackTitleCol is not None else hackTitleBig)
         if hackTitle.find('div') is None:
-            break
+            continue
         hackTitle = hackTitle.find('div').text
         
         if hack.find('div', class_='t776__descr t-descr t-descr_xxs') is None:
-            break
+            continue
         hackText = hack.find('div', class_='t776__descr t-descr t-descr_xxs').text
         hackPlace = hackText.split('Хакатон')[0]
         hackPlace = ''
@@ -69,21 +68,17 @@ def parse_hackathons():
             hackReg = hackText.split('Регистрация:')[1].split('Организатор')[0]
         hackFocus = ''
         if (hackText.find('Технологический фокус хакатона') != -1):
-            break
+            continue
         if hackText.find("Технологический фокус") != -1:
             hackFocus = hackText.split('Технологический фокус:')[1]
             if hackFocus.find('Призовой фонд') != -1:
                 hackFocus = hackFocus.split('Призовой фонд')[0]
             elif hackFocus.find('Целевая аудитория') != -1:
                 hackFocus = hackFocus.split('Целевая аудитория')[0]
-        
-        print(hackTitle, hackImage, hackDate, hackFocus, hackPlace, hackReg, hackLink, sep='\n', end='\n\n')
-        
+                
         hack = Hackathon(title=hackTitle, image=hackImage, date_time=hackDate, focus=hackFocus, place=hackPlace, registration=hackReg, link=hackLink)
     browser.quit()
 
-# schedule.every().day.at("09:00").do(parse_hackathons)
-# while True:
-    # schedule.run_pending()
-
-parse_hackathons()
+schedule.every().day.at("09:00").do(parse_hackathons)
+while True:
+    schedule.run_pending()

@@ -1,4 +1,5 @@
 import json
+import queue
 import re
 from typing import Literal
 from uuid import UUID
@@ -18,7 +19,7 @@ app = get_app("database")
 class Database(IDatabase):
 
     @staticmethod
-    @app.task(name="add_event")
+    @app.task(name="add_event", queue="database")
     def add_event(event: EventDict) -> None:
         if repository.find_one({"id": event["id"]}) or repository.find_one(
             {"name": event["name"]}
@@ -28,24 +29,24 @@ class Database(IDatabase):
         repository.insert(event)
 
     @staticmethod
-    @app.task(name="add_events")
+    @app.task(name="add_events", queue="database")
     def add_events(events: list[EventDict]) -> None:
         for event in events:
             Database.add_event(event)
 
     @staticmethod
-    @app.task(name="get_event")
+    @app.task(name="get_event", queue="database")
     def get_event(event_id: UUID) -> EventDict | None:
         found = repository.find_one({"id": event_id})
         return Event(**found).model_dump() if found else None
 
     @staticmethod
-    @app.task(name="get_events")
+    @app.task(name="get_events", queue="database")
     def get_events() -> list[EventDict]:
         return [Event(**event).model_dump() for event in repository.find({})]
 
     @staticmethod
-    @app.task(name="find_events")
+    @app.task(name="find_events", queue="database")
     def find_events(
         name: str | None = None,
         tag: str | None = None,
@@ -87,10 +88,12 @@ class Database(IDatabase):
         return result
 
     @staticmethod
+    @app.task(name="update_event", queue="database")
     def update_event(event: EventDict) -> None:
         _event = Event.model_validate(event)
         repository.update({"id": _event.id}, event)
 
     @staticmethod
-    def delete_event(event_id: UUID) -> None:
+    @app.task(name="delete_event", queue="database")
+    def delete_event(event_id: int) -> None:
         repository.delete({"id": event_id})

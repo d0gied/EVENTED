@@ -86,7 +86,7 @@ app.conf.beat_schedule = {
 
 class Codenrock(ICodenrock):
     @staticmethod
-    @app.task(name="codenrock.get_events")
+    @app.task(name="codenrock.get_events", queue="codenrock")
     def get_events() -> list[EventDict]:
         events = []
         for contest in load_contests():
@@ -98,7 +98,7 @@ class Codenrock(ICodenrock):
         return events
 
     @staticmethod
-    @app.task(name="codenrock.parse")
+    @app.task(name="codenrock.parse", queue="codenrock")
     def parse() -> None:
         events = Codenrock.get_events()
-        return app.send_task("add_events", args=[events])
+        return app.send_task("add_events", args=[events], queue="database")

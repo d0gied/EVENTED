@@ -8,19 +8,19 @@ from common_utils.models.event import Event, EventDict
 class IDatabase:
 
     @staticmethod
-    @shared_task(name="add_event")
+    @shared_task(name="add_event", queue="database")
     def add_event(event: Event) -> None: ...
 
     @staticmethod
-    @shared_task(name="get_event")
-    def get_event(event_id: UUID) -> Event | None: ...
+    @shared_task(name="get_event", queue="database")
+    def get_event(event_id: int) -> Event | None: ...
 
     @staticmethod
-    @shared_task(name="get_events")
+    @shared_task(name="get_events", queue="database")
     def get_events() -> list[Event]: ...
 
     @staticmethod
-    @shared_task(name="find_events")
+    @shared_task(name="find_events", queue="database")
     def find_events(
         name: str | None = None,
         tag: str | None = None,
@@ -32,9 +32,9 @@ class IDatabase:
     ) -> list[tuple[Event, int]]: ...
 
     @staticmethod
-    @shared_task(name="update_event")
+    @shared_task(name="update_event", queue="database")
     def update_event(event: Event) -> None: ...
 
     @staticmethod
-    @shared_task(name="delete_event")
-    def delete_event(event_id: UUID) -> None: ...
+    @shared_task(name="delete_event", queue="database")
+    def delete_event(event_id: int) -> None: ...

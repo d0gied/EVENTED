@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
-from aiogram import Router, types
-from aiogram.filters import Command
+from aiogram import Router, types, F
+from aiogram.filters import Command, Text
 from common_utils.database import IDatabase
 from common_utils.models.event import Event, EventDict
 
@@ -12,6 +12,14 @@ def date_fmt(date: datetime) -> str:
     return date.strftime("%d.%m.%Y %H:%M")
 
 
+events_keyboard = types.ReplyKeyboardMarkup(keyboard=[
+        [types.KeyboardButton(text="Всё")],
+        [types.KeyboardButton(text="Все хакатоны"), types.KeyboardButton(text="Все митапы"),types.KeyboardButton(text="Все нейронки")],
+        [types.KeyboardButton(text="Всё за неделю"), types.KeyboardButton(text="Всё за месяц"), types.KeyboardButton(text="Всё за год")],
+    ],resize_keyboard=True,input_field_placeholder="Выберите категорию")
+
+
+@router.message(F.text=="Всё")
 @router.message(Command("events"))
 async def get_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
@@ -26,6 +34,7 @@ async def get_events(message: types.Message):
     await send_events(message, events)
 
 
+@router.message(F.text=="Все хакаторы")
 @router.message(Command("hackathons"))
 async def get_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
@@ -40,6 +49,7 @@ async def get_events(message: types.Message):
     await send_events(message, events)
 
 
+@router.message(F.text=="Все митапы")
 @router.message(Command("meetups"))
 async def get_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
@@ -54,6 +64,7 @@ async def get_events(message: types.Message):
     await send_events(message, events)
 
 
+@router.message(F.text=="Все нейронки")
 @router.message(Command("ai"))
 async def get_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
@@ -68,6 +79,7 @@ async def get_events(message: types.Message):
     await send_events(message, events)
 
 
+@router.message(F.text=="Всё за неделю")
 @router.message(Command("week"))
 async def get_recent_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
@@ -85,6 +97,7 @@ async def get_recent_events(message: types.Message):
     await send_events(message, events)
 
 
+@router.message(F.text=="Всё за месяц")
 @router.message(Command("month"))
 async def get_recent_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
@@ -102,6 +115,7 @@ async def get_recent_events(message: types.Message):
     await send_events(message, events)
 
 
+@router.message(F.text=="Всё за год")
 @router.message(Command("year"))
 async def get_recent_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "hackathons-rf"
+version = "0.1.0"
+description = ""
+authors = ["d0gied <german.n.u@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fake-useragent = "^1.5.0"
+requests = "^2.31.0"
+schedule = "^1.2.1"
+beautifulsoup4 = "^4.12.3"
+lxml = "^5.1.0"
+common-utils = { path = "../../../libs/common-utils", develop = false }
+redis = "^5.0.3"
+
+
+[tool.poetry.dev-dependencies]
+common-utils = { path = "../../../libs/common-utils", develop = true }
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

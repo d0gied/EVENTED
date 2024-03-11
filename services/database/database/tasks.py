@@ -1,4 +1,5 @@
 import json
+import re
 from uuid import UUID
 
 from celery import Celery
@@ -17,7 +18,18 @@ class Database(IDatabase):
     @staticmethod
     @app.task(name="add_event")
     def add_event(event: EventDict) -> None:
+        if repository.find_one({"id": event["id"]}) or repository.find_one(
+            {"name": event["name"]}
+        ):
+            print("Event already exists")
+            return
         repository.insert(event)
+
+    @staticmethod
+    @app.task(name="add_events")
+    def add_events(events: list[EventDict]) -> None:
+        for event in events:
+            Database.add_event(event)
 
     @staticmethod
     @app.task(name="get_event")

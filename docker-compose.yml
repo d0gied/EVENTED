@@ -132,7 +132,45 @@ services:
       - .env
     depends_on:
       - mongo
-    
+
+  parser-codenrock:
+    container_name: evented-parser-codenrock
+    # restart: always
+    image: evented-parser
+    build:
+      context: .
+      dockerfile: docker/service.Dockerfile
+      args:
+        - SERVICE_NAME=parsers/codenrock
+    environment:
+      CELERY_BROKER_URL: pyamqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@evented-rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://${REDIS_USER}:${REDIS_PASS}@evented-redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - redis
+      - database
+
+  parser-codenrock-beat:
+    container_name: evented-parser-codenrock-beat
+    # restart: always
+    image: evented-parser
+    build:
+      context: .
+      dockerfile: docker/service.Dockerfile
+      args:
+        - SERVICE_NAME=parsers/codenrock
+    environment:
+      CELERY_BROKER_URL: pyamqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@evented-rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://${REDIS_USER}:${REDIS_PASS}@evented-redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      - parser-codenrock
+
+    command: celery -A parser.app beat -l info
+
 
 volumes:
   evented-rabbitmq:

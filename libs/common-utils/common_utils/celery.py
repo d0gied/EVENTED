@@ -13,4 +13,5 @@ def get_app(name: str) -> Celery:
         timezone="Europe/Moscow",
         enable_utc=True,
     )
+
     return app

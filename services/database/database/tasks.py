@@ -27,7 +27,6 @@ class Database(IDatabase):
         if repository.find_one({"id": event["id"]}) or repository.find_one(
             {"name": event["name"]}
         ):
-            print("Event already exists")
             return
         repository.insert(event)
 

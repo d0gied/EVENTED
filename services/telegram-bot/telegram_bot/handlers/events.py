@@ -29,7 +29,7 @@ async def get_events(message: types.Message):
 @router.message(Command("hackathon"))
 async def get_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
-        kwargs={"later_than": datetime.now(), type: "hackathon"}
+        kwargs={"later_than": datetime.now(), "type": "hackathon"}
     ).get()  # type: ignore
 
     if not events:
@@ -43,7 +43,7 @@ async def get_events(message: types.Message):
 @router.message(Command("meetups"))
 async def get_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
-        kwargs={"later_than": datetime.now(), type: "meetup"}
+        kwargs={"later_than": datetime.now(), "type": "meetup"}
     ).get()  # type: ignore
 
     if not events:

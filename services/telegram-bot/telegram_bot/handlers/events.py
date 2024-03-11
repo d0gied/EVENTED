@@ -131,7 +131,7 @@ def get_date(event: Event):
 
 
 async def send_events(message: types.Message, events: list[Event]):
-    events = sorted(events, key=get_date)
+    events = sorted(events, key=get_date, reverse=True)
     for event in events:
         url = "https://codenrock.com/contests/" + str(event.id)
         msg = f"<a href='{url}'>{event.name}</a>\n"

@@ -39,6 +39,7 @@ FROM base as final
 
 COPY --from=builder /opt/poetry /opt/poetry
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 ARG SERVICE_NAME
 
@@ -54,7 +55,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 
 # Copy the service
-COPY config /config
 COPY services/${SERVICE_NAME} /app/
 
 RUN ["chmod", "+x", "/app/entrypoint.sh"]

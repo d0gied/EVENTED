@@ -5,4 +5,11 @@
     ],
     "python.analysis.useLibraryCodeForTypes": true,
     "python.analysis.diagnosticMode": "workspace",
+    // format with black on save
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "always"
+    },
+    "python.formatting.provider": "black",
 }

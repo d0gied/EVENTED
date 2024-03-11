@@ -92,8 +92,4 @@ config = DatabaseConfig()
 print(config.mongo.host) # localhost
 print(config.mongo.username) # root
 ```
-
-**Important**
-- Config class is only for type hinting, there is no validation of configuration, no default values and no type casting. Data will be directly loaded from yaml file.
-
     

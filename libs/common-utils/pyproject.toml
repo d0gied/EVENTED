@@ -10,6 +10,8 @@ python = "^3.11"
 pyyaml = "^6.0.1"
 loguru = "^0.7.2"
 pydantic = "^2.6.1"
+pydantic-settings = "^2.2.1"
+celery = {extras = ["pydantic"], version = "^5.3.6"}
 
 [build-system]
 requires = ["poetry-core"]

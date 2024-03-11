@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python ./run.py
+celery -A app.app worker --loglevel=info -n database@0

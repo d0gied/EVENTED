@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "message-broker"
+name = "telegram-bot"
 version = "0.1.0"
-description = "Message broker lib"
+description = "Telegram bot"
 authors = ["d0gied <german.n.u@mail.ru>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pika = "^1.3.2"
+aiogram = "^3.4.1"
 
 
 [build-system]

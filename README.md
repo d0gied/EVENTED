@@ -15,7 +15,7 @@ EVENTED is service that provides a simple and scalable event management system. 
 - **Pydantic**: For data validation and settings management using Python type annotations.
 - **SQLAlchemy**: For SQL databases.
 - **Docker**: For containerization.
-- **Kafka/RabbitMQ**: For message broker.
+- **RabbitMQ**: For message broker.
 - **MongoDB**: For storing events.
 - **PostgreSQL**: For storing user data.
 - **Redis**: For caching.

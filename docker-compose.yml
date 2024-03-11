@@ -1,10 +1,142 @@
 version: "3.8"
 
 services:
+  rabbitmq:
+    container_name: evented-rabbitmq
+    restart: always
+    hostname: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    env_file:
+      - .env
+    volumes:
+      - evented-rabbitmq:/var/lib/rabbitmq
+
+  flower:
+    container_name: evented-flower
+    restart: always
+    hostname: flower
+    image: mher/flower:latest
+    ports:
+      - "5555:5555"
+    environment:
+      CELERY_BROKER_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@evented-rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://${REDIS_USER}:${REDIS_PASS}@evented-redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - redis
+
+  redis:
+    container_name: evented-redis
+    restart: always
+    hostname: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - evented-redis:/data
+
+  pg:
+    container_name: evented-pg
+    restart: always
+    hostname: pg
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    env_file:
+      - .env
+    volumes:
+      - evented-pg:/var/lib/postgresql/data
+
+  api:
+    container_name: evented-api
+    restart: always
+    image: evented-api
+    build:
+      context: .
+      dockerfile: docker/service.Dockerfile
+      args:
+        - SERVICE_NAME=api
+    environment:
+      CELERY_BROKER_URL: pyamqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@evented-rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://${REDIS_USER}:${REDIS_PASS}@evented-redis:6379/0
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - database
+
   database:
+    container_name: evented-database
+    restart: always
     image: evented-database
     build:
       context: .
       dockerfile: docker/service.Dockerfile
       args:
         - SERVICE_NAME=database
+    environment:
+      MONGO_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@evented-mongo:27017/${MONGO_DB}
+      PG_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@evented-pg:5432/${POSTGRES_DB}
+      CELERY_BROKER_URL: pyamqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@evented-rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://${REDIS_USER}:${REDIS_PASS}@evented-redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - pg
+      - rabbitmq
+      - redis
+
+  mongo:
+    container_name: evented-mongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017-27019:27017-27019"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    env_file:
+      - .env
+    command: mongod --auth --bind_ip_all
+    volumes:
+      - evented-mongo:/data/db
+      - evented-mongo-config:/data/configdb
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+  mongo-express:
+    image: mongo-express
+    container_name: evented-mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@evented-mongo:27017/${MONGO_DB}
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    
+
+volumes:
+  evented-rabbitmq:
+  evented-redis:
+  evented-pg:
+  evented-mongo:
+  evented-mongo-config:

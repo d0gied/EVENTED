@@ -1,13 +1,18 @@
 from aiogram import Router, types
 from aiogram.filters import Command
 
+from .events import events_keyboard
+
 router = Router()
 
 
 @router.message(Command("start"))
 async def start(message: types.Message):
     await message.answer(
-        "Привет! Я бот для поиска мероприятий. Напиши /help, чтобы узнать, что я умею."
+        "Привет! Я бот для поиска мероприятий."
+        "Ниже ты найдешь клавиатуру с фильтрами, которые у меня есть\n"
+        "Напиши /help, чтобы узнать, что я умею. ",
+        reply_markup=events_keyboard,
     )
 
 

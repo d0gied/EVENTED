@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from aiogram import Router, types, F
-from aiogram.filters import Command, Text
+from aiogram.filters import Command
 from common_utils.database import IDatabase
 from common_utils.models.event import Event, EventDict
 

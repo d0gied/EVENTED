@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal
 from uuid import UUID
 
@@ -27,6 +28,8 @@ class IDatabase:
         type: (
             Literal["projects", "ml", "remote", "hackathon", "meetup", "test"] | None
         ) = None,
+        later_than: datetime | None = None,
+        earlier_than: datetime | None = None,
         limit: int | None = None,
         threshold: int = 80,
     ) -> list[tuple[Event, int]]: ...

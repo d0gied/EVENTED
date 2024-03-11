@@ -8,8 +8,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-common-utils = { path = "../../libs/common-utils", develop = false }
 aiogram = "^3.4.1"
+common-utils = { path = "../../libs/common-utils", develop = false }
 
 [tool.poetry.dev-dependencies]
 common-utils = { path = "../../libs/common-utils", develop = true }

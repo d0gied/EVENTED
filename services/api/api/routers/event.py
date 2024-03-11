@@ -1,10 +1,8 @@
+from datetime import datetime
 from typing import Literal
-from uuid import UUID
 
-from celery import Celery
 from celery.result import AsyncResult
 from common_utils.celery import get_app
-from common_utils.config import CeleryConfig
 from common_utils.database import IDatabase
 from common_utils.models.event import Event
 from fastapi import APIRouter
@@ -26,6 +24,8 @@ async def find_events(
     type: (
         Literal["projects", "ml", "remote", "hackathon", "meetup", "test"] | None
     ) = None,
+    later_than: datetime | None = datetime.now(),
+    earlier_than: datetime | None = None,
     limit: int | None = None,
     threshold: int = 80,
 ):
@@ -35,6 +35,8 @@ async def find_events(
             "tag": tag,
             "type": type,
             "limit": limit,
+            "later_than": later_than,
+            "earlier_than": earlier_than,
             "threshold": threshold,
         }
     )  # type: ignore

@@ -172,6 +172,26 @@ services:
     command: celery -A parser.app beat -l info
 
 
+  bot:
+    container_name: evented-bot
+    # restart: always
+    image: evented-bot
+    build:
+      context: .
+      dockerfile: docker/service.Dockerfile
+      args:
+        - SERVICE_NAME=telegram-bot
+    environment:
+      CELERY_BROKER_URL: pyamqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@evented-rabbitmq:5672//
+      CELERY_RESULT_BACKEND: redis://${REDIS_USER}:${REDIS_PASS}@evented-redis:6379/0
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - redis
+      - database
+
 volumes:
   evented-rabbitmq:
   evented-redis:

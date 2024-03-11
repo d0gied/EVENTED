@@ -1,6 +1,8 @@
 import json
 import queue
 import re
+from datetime import datetime
+from tracemalloc import start
 from typing import Literal
 from uuid import UUID
 
@@ -53,6 +55,8 @@ class Database(IDatabase):
         type: (
             Literal["projects", "ml", "remote", "hackathon", "meetup", "test"] | None
         ) = None,
+        later_than: datetime | None = None,
+        earlier_than: datetime | None = None,
         limit: int | None = None,
         threshold: int = 80,
     ) -> list[tuple[Event, int]]:
@@ -80,6 +84,21 @@ class Database(IDatabase):
                 score = min(
                     score, fuzz.token_set_ratio(type.lower(), event["type"].lower())
                 )
+            date = event["end_date"]
+            if date is None:
+                date = event["start_date"]
+            if date is None:
+                date = event["end_registration"]
+            if date is None:
+                date = event["start_registration"]
+            if later_than:
+                if date is None or date < later_than:
+                    score = 0
+
+            if earlier_than:
+                if date is None or date > earlier_than:
+                    score = 0
+
             if score >= threshold:
                 result.append((Event(**event).model_dump(), score))
         result = sorted(result, key=lambda x: -x[1])[:limit]

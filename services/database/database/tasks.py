@@ -84,6 +84,7 @@ class Database(IDatabase):
         result = sorted(result, key=lambda x: -x[1])[:limit]
         if not result:
             return []
+        return result
 
     @staticmethod
     def update_event(event: EventDict) -> None:

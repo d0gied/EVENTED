@@ -79,7 +79,7 @@ app = get_app("codenrock")
 app.conf.beat_schedule = {
     "parse": {
         "task": "codenrock.parse",
-        "schedule": 60.0,
+        "schedule": 60.0 * 10.0,
     }
 }
 

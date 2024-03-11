@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from aiogram import Router, types
 from aiogram.filters import Command
@@ -26,7 +26,7 @@ async def get_events(message: types.Message):
     await send_events(message, events)
 
 
-@router.message(Command("hackathon"))
+@router.message(Command("hackathons"))
 async def get_events(message: types.Message):
     events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
         kwargs={"later_than": datetime.now(), "type": "hackathon"}
@@ -68,13 +68,81 @@ async def get_events(message: types.Message):
     await send_events(message, events)
 
 
+@router.message(Command("week"))
+async def get_recent_events(message: types.Message):
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+        kwargs={
+            "later_than": datetime.now() - timedelta(days=7),
+            "earlier_than": datetime.now(),
+        }
+    ).get()  # type: ignore
+
+    if not events:
+        message.answer("Пока что нет мероприятий")
+        return
+
+    events: list[Event] = [Event.model_validate(event) for event, score in events]  # type: ignore
+    await send_events(message, events)
+
+
+@router.message(Command("month"))
+async def get_recent_events(message: types.Message):
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+        kwargs={
+            "later_than": datetime.now() - timedelta(days=30),
+            "earlier_than": datetime.now(),
+        }
+    ).get()  # type: ignore
+
+    if not events:
+        message.answer("Пока что нет мероприятий")
+        return
+
+    events: list[Event] = [Event.model_validate(event) for event, score in events]  # type: ignore
+    await send_events(message, events)
+
+
+@router.message(Command("year"))
+async def get_recent_events(message: types.Message):
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+        kwargs={
+            "later_than": datetime.now() - timedelta(days=365),
+            "earlier_than": datetime.now(),
+        }
+    ).get()  # type: ignore
+
+    if not events:
+        message.answer("Пока что нет мероприятий")
+        return
+
+    events: list[Event] = [Event.model_validate(event) for event, score in events]  # type: ignore
+    await send_events(message, events)
+
+
+def get_date(event: Event):
+    date = event.end_date
+    if date is None:
+        date = event.start_date
+    if date is None:
+        date = event.end_registration
+    if date is None:
+        date = event.start_registration
+    return date
+
+
 async def send_events(message: types.Message, events: list[Event]):
+    events = sorted(events, key=get_date)
     for event in events:
         url = "https://codenrock.com/contests/" + str(event.id)
         msg = f"<a href='{url}'>{event.name}</a>\n"
         msg += f"Тип: {event.type}\n"
         if event.tags:
-            tags = list(map(lambda tag: f"#{tag.name_ru}", event.tags))
+            tags = list(
+                map(
+                    lambda tag: f"#{tag.name_ru.replace(' ', '_').replace('-', '_').replace('/', ', #')}",
+                    event.tags,
+                )
+            )
             msg += f"Теги: {', '.join(tags)}\n"
         if event.prize:
             msg += f"Призы: {event.prize}\n"

@@ -14,6 +14,18 @@ def date_fmt(date: datetime) -> str:
     return date.strftime("%d.%m.%Y %H:%M")
 
 
+@router.message(F.text[0] == "#")
+async def search_events(message: types.Message):
+    request = message.text
+
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+        kwargs={"tag": request[1:], "threshold": 50, "limit": 5}
+    ).get()
+
+    events = [Event.model_validate(event) for event, score in events[:5]]  # type: ignore
+    await send_events(message, events)  # type: ignore
+
+
 @router.message(F.text[0] != "/")
 async def search_events(message: types.Message):
     request = message.text

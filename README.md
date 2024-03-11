@@ -38,6 +38,11 @@ EVENTED is service that provides a simple and scalable event management system. 
 For now all documentations are in the libs directories. Each service has its own documentation in the `README.md` file.
 Sooner, we will have a separate documentation directory for the whole project.
 
+- [Common Utils](libs/common-utils/README.md)
+- [Parsers](services/parsers/README.md)
+- [Celery](libs/common-utils/README.md#celery)
+- [Databases](libs/common-utils/README.md#databases)
+
 ## Configuration
 
 [Read more](libs/common-utils/README.md#common-utilsconfig)

@@ -93,3 +93,57 @@ print(config.mongo.host) # localhost
 print(config.mongo.username) # root
 ```
     
+## Celery
+
+Celery is used for asynchronous task processing. It is used to handle long-running tasks such as sending emails, generating reports, and other background tasks.
+
+### Workflow
+
+1. Add shared task to the `common-utils` library.
+2. Take the shared task from the `common-utils` library and implement it in the service.
+3. Add the task to the `celery` worker in the service.
+
+### Usage
+
+**Start celery worker:**
+```bash
+# /services/{service_name}
+celery -A service worker --loglevel=info
+```
+
+**Start celery beat:**
+```bash
+# /services/{service_name}
+celery -A service beat --loglevel=info
+```
+
+
+## Databases
+
+This module provides shared_tasks for working with databases.
+
+### Methods
+
+- `add_event(event: Event)` - adds event to the database.
+- `get_event(event_id: int)` - gets event from the database.
+- `get_events()` - gets all events from the database.
+- `find_events(name: str, tag: str, type: str, later_than: datetime, earlier_than: datetime, limit: int, threshold: int)` - finds events by name, tag, type, time, limit and threshold(all parameters are optional).
+
+- `update_event(event: Event)` - updates event in the database.
+- `delete_event(event_id: int)` - deletes event from the database.
+- `subscribe(user_id: int, tag: str)` - subscribes user to the event by tag.
+- `unsubscribe(user_id: int, tag: str)` - unsubscribes user from the event by tag.
+- `subscribers(tag: str)` - gets all subscribers by tag.
+
+### Usage
+
+```python
+from common_utils import IDatabase
+
+events = IDatabase.get_events.apply_async().get()
+future_events = IDatabase.find_events.apply_async(kwargs={
+    "later_than": datetime.now(),
+    "limit": 10
+}).get()
+```
+

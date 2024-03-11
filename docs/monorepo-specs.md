@@ -167,3 +167,27 @@ Utility scripts are stored in the `scripts` directory. They are used for deploym
 ### Docker Compose
 
 The `docker-compose.yml` file is used to run the services locally. It is also used to run the entire stack locally.
+
+## Celery
+
+Celery is used for asynchronous task processing. It is used to handle long-running tasks such as sending emails, generating reports, and other background tasks.
+
+### Workflow
+
+1. Add shared task to the `common-utils` library.
+2. Take the shared task from the `common-utils` library and implement it in the service.
+3. Add the task to the `celery` worker in the service.
+
+### Usage
+
+**Start celery worker:**
+```bash
+# /services/{service_name}
+celery -A service worker --loglevel=info
+```
+
+**Start celery beat:**
+```bash
+# /services/{service_name}
+celery -A service beat --loglevel=info
+```

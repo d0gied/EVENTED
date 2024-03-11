@@ -41,3 +41,19 @@ class IDatabase:
     @staticmethod
     @shared_task(name="delete_event", queue="database")
     def delete_event(event_id: int) -> None: ...
+
+    @staticmethod
+    @shared_task(name="subscribe", queue="database")
+    def subscribe(user_id: int, tag: str | None = None) -> None: ...
+
+    @staticmethod
+    @shared_task(name="unsubscribe", queue="database")
+    def unsubscribe(user_id: int, tag: str | None = None) -> None: ...
+
+    @staticmethod
+    @shared_task(name="subscribers", queue="database")
+    def subscribers(tag: str) -> None: ...
+
+    @staticmethod
+    @shared_task(name="new_events", queue="database")
+    def new_events() -> list[EventDict]: ...

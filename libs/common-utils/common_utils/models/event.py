@@ -33,6 +33,7 @@ class Event(BaseModel):
     users_count: int
     available_task_types: list[str]
     tags: list[Tag]
+    notified: bool = True
 
 
 EventDict = dict[str, Any]

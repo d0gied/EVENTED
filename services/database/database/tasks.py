@@ -15,6 +15,7 @@ from fuzzywuzzy import fuzz, process
 from .mongo import MongoRepository
 
 repository = MongoRepository("events")
+users = MongoRepository("users")
 app = get_app("database")
 
 
@@ -113,6 +114,52 @@ class Database(IDatabase):
         repository.update({"id": _event.id}, event)
 
     @staticmethod
+    @app.task(name="new_events", queue="database")
+    def new_events() -> list[EventDict]:
+        return [
+            Event(**event).model_dump()
+            for event in repository.find({"notified": False})
+        ]
+
+    @staticmethod
     @app.task(name="delete_event", queue="database")
     def delete_event(event_id: int) -> None:
         repository.delete({"id": event_id})
+
+    @staticmethod
+    @app.task(name="subscribe", queue="database")
+    def subscribe(user_id: int, tag: str | None = None) -> None:
+        if tag is not None:
+            tag = tag.lower()
+        else:
+            tag = "*"
+
+        if user := users.find_one({"id": user_id}):
+            if tag not in user["tags"]:
+                user["tags"].append(tag)
+            users.update({"id": user_id}, user)
+        else:
+            users.insert({"id": user_id, "tags": [tag]})
+        print("Subscribed")
+
+    @staticmethod
+    @app.task(name="unsubscribe", queue="database")
+    def unsubscribe(user_id: int, tag: str | None = None) -> None:
+        if tag is not None:
+            tag = tag.lower()
+        else:
+            tag = "*"
+
+        if user := users.find_one({"id": user_id}):
+            if tag == "*":
+                users.delete({"id": user_id})
+            else:
+                user["tags"].remove(tag)
+                users.update({"id": user_id}, user)
+        print("Unsubscribed")
+
+    @staticmethod
+    @app.task(name="subscribers", queue="database")
+    def subscribers(tag: str) -> list[int]:
+        tag = tag.lower()
+        return [user["id"] for user in users.find({"tags": tag})]

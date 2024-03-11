@@ -33,8 +33,8 @@ events_keyboard = types.ReplyKeyboardMarkup(
 
 @router.message(F.text == "Всё")
 @router.message(Command("events"))
-async def get_events(message: types.Message):
-    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+async def get_events(message: types.Message):  # type: ignore
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(  # type: ignore
         kwargs={"later_than": datetime.now()}
     ).get()  # type: ignore
 
@@ -48,8 +48,8 @@ async def get_events(message: types.Message):
 
 @router.message(F.text == "Все хакаторы")
 @router.message(Command("hackathons"))
-async def get_events(message: types.Message):
-    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+async def get_events(message: types.Message):  # type: ignore
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(  # type: ignore
         kwargs={"later_than": datetime.now(), "type": "hackathon"}
     ).get()  # type: ignore
 
@@ -63,8 +63,8 @@ async def get_events(message: types.Message):
 
 @router.message(F.text == "Все митапы")
 @router.message(Command("meetups"))
-async def get_events(message: types.Message):
-    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+async def get_events(message: types.Message):  # type: ignore
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(  # type: ignore
         kwargs={"later_than": datetime.now(), "type": "meetup"}
     ).get()  # type: ignore
 
@@ -79,7 +79,7 @@ async def get_events(message: types.Message):
 @router.message(F.text == "Все нейронки")
 @router.message(Command("ai"))
 async def get_events(message: types.Message):
-    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(  # type: ignore
         kwargs={"later_than": datetime.now(), "tag": "ai"}
     ).get()  # type: ignore
 
@@ -93,8 +93,8 @@ async def get_events(message: types.Message):
 
 @router.message(F.text == "Всё за неделю")
 @router.message(Command("week"))
-async def get_recent_events(message: types.Message):
-    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+async def get_recent_events(message: types.Message):  # type: ignore
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(  # type: ignore
         kwargs={
             "later_than": datetime.now() - timedelta(days=7),
             "earlier_than": datetime.now(),
@@ -111,8 +111,8 @@ async def get_recent_events(message: types.Message):
 
 @router.message(F.text == "Всё за месяц")
 @router.message(Command("month"))
-async def get_recent_events(message: types.Message):
-    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+async def get_recent_events(message: types.Message):  # type: ignore
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(  # type: ignore
         kwargs={
             "later_than": datetime.now() - timedelta(days=30),
             "earlier_than": datetime.now(),
@@ -130,7 +130,7 @@ async def get_recent_events(message: types.Message):
 @router.message(F.text == "Всё за год")
 @router.message(Command("year"))
 async def get_recent_events(message: types.Message):
-    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(
+    events: list[tuple[EventDict, int]] = IDatabase.find_events.apply_async(  # type: ignore
         kwargs={
             "later_than": datetime.now() - timedelta(days=365),
             "earlier_than": datetime.now(),

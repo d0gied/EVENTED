@@ -16,11 +16,11 @@ def date_fmt(date: datetime) -> str:
 
 @router.message(Command("/subscribe"))
 async def subscribe(message: types.Message):
-    IDatabase.subscribe.apply_async(kwargs={"user_id": message.from_user.id}).get()
+    IDatabase.subscribe.apply_async(kwargs={"user_id": message.from_user.id}).get()  # type: ignore
     await message.answer("Вы подписаны на обновления")
 
 
 @router.message(Command("/unsubscribe"))
 async def unsubscribe(message: types.Message):
-    IDatabase.unsubscribe.apply_async(kwargs={"user_id": message.from_user.id}).get()
+    IDatabase.unsubscribe.apply_async(kwargs={"user_id": message.from_user.id}).get()  # type: ignore
     await message.answer("Вы отписаны от обновлений")

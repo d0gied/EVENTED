@@ -13,7 +13,7 @@ app = get_app("api")
 
 @router.get("/all")
 async def get_events():
-    task: AsyncResult = IDatabase.get_events.apply_async()
+    task: AsyncResult = IDatabase.get_events.apply_async()  # type: ignore
     return str(task.get())
 
 
@@ -53,8 +53,3 @@ async def add_event(event: Event):
 async def get_event(event_id: int):
     task: AsyncResult = IDatabase.get_event.apply_async(args=[event_id])  # type: ignore
     return str(task.get())
-
-
-# @router.post("add/")
-# def add_event():
-#     return {"event": "event"}

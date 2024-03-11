@@ -4,7 +4,7 @@ from pymongo import MongoClient
 
 from .config import DatabaseConfig
 
-config = DatabaseConfig()
+config = DatabaseConfig()  # type: ignore
 
 
 class MongoRepository:

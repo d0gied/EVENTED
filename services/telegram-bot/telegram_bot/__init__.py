@@ -15,10 +15,10 @@ async def poll_events(bot: Bot):
         return
 
     for event in events:
-        await send_event(bot, event)
+        await send_event(bot, event)  # type: ignore
 
 
-async def send_event(bot: Bot, event: EventDict):
+async def send_event(bot: Bot, event: EventDict):  # type: ignore
     event: Event = Event.model_validate(event)  # type: ignore
 
     subscribers = []

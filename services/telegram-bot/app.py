@@ -8,7 +8,7 @@ from telegram_bot.handlers.subscribe import router as subscribe_router
 
 routers = [events_router, start_router, subscribe_router, search_router]
 
-config = TelegramConfig()
+config = TelegramConfig()  # type: ignore
 
 
 dp = Dispatcher()
